@@ -29,7 +29,6 @@ export const stockBotMiddleware = async (req: Request, res: Response, next:NextF
         return;
     }
     const stockCode = cmdMatch[1];
-    console.log(cmdMatch);
     const ch = await amqpChannel();
     ch.assertQueue('stock_bot', { durable: false, });
     const botObject = {
@@ -37,7 +36,6 @@ export const stockBotMiddleware = async (req: Request, res: Response, next:NextF
         stockCode,
         channel,
     };
-    console.log(botObject);
     const messageBuffer = Buffer.from(JSON.stringify(botObject));
     ch.sendToQueue('stock_bot', messageBuffer);
     next();

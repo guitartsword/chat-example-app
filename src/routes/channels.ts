@@ -9,7 +9,6 @@ router.get('/', async (req, res) => {
         channel: 1,
         _id: 0,
     }).exec((error, documents) => {
-        // console.log(error, documents)
         const rawChannels = documents || [];
         const channels = new Set(rawChannels
             .map((doc) => doc.channel))
