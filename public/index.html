@@ -1,16 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="bulma.min.css">
 </head>
-<body>
-    <div id="chat">
 
+<body>
+    <div class="container">
+        <div class="columns ">
+            <div class="column" id="login-section">
+                <h1 class="is-title">Login</h1>
+                <div class="field">
+                    <label class="label">Username</label>
+                    <div class="control">
+                        <input id="username" class="input" type="text" placeholder="e.g alex_smith">
+                    </div>
+                </div>
+    
+                <div class="field">
+                    <label class="label">Password</label>
+                    <div class="control">
+                        <input id="password" class="input" type="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="field is-grouped is-grouped-right">
+                    <div class="control">
+                        <button class="button is-info is-outlined" onclick="handleRegister()">Register</button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-info" onclick="handleLogin()">Login</button>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <h1 id="channelName" class="is-title">Default</h1>
+                <div id="chat" class="box">
+    
+                </div>
+                <div class="footer">
+                    <input class="input" type="text" name="message" id="message">
+                    <button class="button" type="button" name="message" id="sendMessage" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <input type="text" name="message" id="message">
-    <button type="button" name="message" id="sendMessage" onclick="sendMessage()">Send</button>
+    
+    
+    
 </body>
 <script src="connectToChat.js"></script>
+
 </html>
