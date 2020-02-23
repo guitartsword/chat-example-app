@@ -1,4 +1,10 @@
-let ws = new WebSocket(`ws://${location.host}/chat`);
+let wsUrl = `${location.host}/chat`
+if (location.protocol === 'https:') {
+    wsUrl = `wss://${wsUrl}`;
+} else {
+    wsUrl = `ws://${wsUrl}`;
+}
+let ws = new WebSocket(wsUrl);
 setWSEvents(ws);
 let reconnectInterval;
 let authToken = '';
