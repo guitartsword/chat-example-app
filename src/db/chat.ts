@@ -4,6 +4,7 @@ import DataStore from "nedb";
 const db  = new DataStore('./db/chat');
 db.loadDatabase();
 
+export default db;
 export interface ChatMessage {
     message: string
     timestamp: number

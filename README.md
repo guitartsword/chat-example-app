@@ -6,6 +6,8 @@ This is a chat app using RabbitMQ, express and ws
 - Node installed
 - A web socket capable browser
 - Have one RabbitMQ instance create and at least one queue
+- bcrypt depends on `python 2.x`, `node-gyp`. [more details here](https://github.com/kelektiv/node.bcrypt.js)
+- node-gyp wich depends on python, and some specifics to OS, [more details here](https://github.com/nodejs/node-gyp)
 
 ## Installation Instructions
 

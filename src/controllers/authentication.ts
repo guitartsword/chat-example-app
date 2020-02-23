@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import { getUser } from '../db/users';
 import { JWT_SECRET } from '../util/envVariables';
 import { UserToken } from '../util/commonTypes';
@@ -9,7 +10,7 @@ export const handleLogin = async (username: string, password: string) => {
     if(error || !document) {
         return { error: 'User not found' };
     }
-    if (password === document.password){
+    if (bcrypt.compareSync(password, document.password)){
         return { token: jwt.sign({ username }, JWT_SECRET) };
     }
     return { error: 'Invalid Password' };

@@ -13,7 +13,11 @@ export const publishMessage = async (chatMessage: ChatMessage) => {
 }
 
 export const stockBotMiddleware = async (req: Request, res: Response, next:NextFunction) => {
-    const message = req.body.message;
+    const {
+        username,
+        message,
+        channel='default',
+    } = req.body;
     if (!message) {
         next();
         return;
@@ -25,7 +29,13 @@ export const stockBotMiddleware = async (req: Request, res: Response, next:NextF
     const stockCode = message.replace(/\/stock\s*=?\s*/, '');
     const ch = await amqpChannel();
     ch.assertQueue('stock_bot', { durable: false, });
-    const messageBuffer = Buffer.from(stockCode);
+    const botObject = {
+        username,
+        stockCode,
+        channel,
+    };
+    console.log(botObject);
+    const messageBuffer = Buffer.from(JSON.stringify(botObject));
     ch.sendToQueue('stock_bot', messageBuffer);
     next();
 }

@@ -2,58 +2,71 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="bulma.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="bulma.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="container">
-        <div class="columns">
-            <div class="column" id="login-section">
-                <form onsubmit="handleLogin()">
-                    <h1 class="is-title">Login</h1>
-                    <div class="field">
-                        <label class="label">Username</label>
-                        <div class="control">
-                            <input id="username" class="input" type="text" placeholder="e.g alex_smith">
-                        </div>
-                    </div>
-    
-                    <div class="field">
-                        <label class="label">Password</label>
-                        <div class="control">
-                            <input id="password" class="input" type="password" placeholder="Password">
-                        </div>
-                    </div>
-                    <div class="field is-grouped is-grouped-right">
-                        <div class="control">
-                            <button class="button is-info is-outlined" onclick="handleRegister()">Register</button>
-                        </div>
-                        <div class="control">
-                            <button type="submit " class="button is-info" onclick="handleLogin()">Login</button>
-                        </div>
-                    </div>
-                </form>
+  <div class="container">
+    <div class="columns">
+      <div class="column" id="login-section">
+        <form onsubmit="handleLogin()">
+          <h1 class="title">Login</h1>
+          <div class="field">
+            <label class="label">Username</label>
+            <div class="control">
+              <input id="username" class="input" type="text" placeholder="e.g alex_smith">
             </div>
-            <div class="column">
-                <h1 id="channelName" class="is-title">Default</h1>
-                <div id="chat" class="box">
+          </div>
 
-                </div>
-                <form class="field is-grouped is-grouped-right" onsubmit="sendMessage()">
-                    <div class="control is-expanded">
-                        <input class="input" type="text" name="message" id="message">
-                    </div>
-                    <div class="control">
-                        <button class="button" type="submit" name="message" onclick="sendMessage()">Send</button>
-                    </div>
-                </form>
+          <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+              <input id="password" class="input" type="password" placeholder="Password">
             </div>
-        </div>
+          </div>
+          <div class="field is-grouped is-grouped-right">
+            <div class="control">
+              <button class="button is-info is-outlined" onclick="handleRegister()">Register</button>
+            </div>
+            <div class="control">
+              <button type="submit " class="button is-info" onclick="handleLogin()">Login</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="column" id="chat-section" style="display:none;">
+        <!-- <div class="columns"> -->
+          <div class="field">
+            <div class="control">
+              <div class="select is-large is-fullwidth">
+                <select id="channelList" onchange="changeChannel(value)">
+                  <option value="default">default</option>
+                  <option value="honduras">honduras</option>
+                  <option value="US-1">US-1</option>
+                  <option value="US-2">US-2</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="chat" class="box column">
+
+          </div>
+        <!-- </div> -->
+        <form class="field is-grouped is-grouped-right" onsubmit="sendMessage()">
+          <div class="control is-expanded">
+            <input class="input" type="text" name="message" id="message">
+          </div>
+          <div class="control">
+            <button class="button" type="submit" name="message" onclick="sendMessage()">Send</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 
 
 

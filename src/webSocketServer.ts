@@ -57,6 +57,9 @@ export const createSocketServer = async (server: Server) => {
             const event = JSON.parse(message.toString());
             this.emit(event.type, event.payload);
         });
+        ws.on('channel', (channel) => {
+            ws.channel = channel;
+        });
         // ws.on('chat', async (payload) => {
         //     if (!ws.isAuthenticated) {
         //         ws.send(JSON.stringify({
@@ -76,7 +79,6 @@ export const createSocketServer = async (server: Server) => {
     });
     const ch = await amqpChannel();
     ch.consume(RABBITMQ_QUEUE, (msg) => {
-        console.log(msg?.content.toString());
         const {
             channel,
             message,
@@ -84,13 +86,6 @@ export const createSocketServer = async (server: Server) => {
             user
         } = JSON.parse(msg?.content.toString() || '{}');
         wsServer.clients.forEach(async (ws:CustomWS) => {
-            console.log({
-                channel,
-                message,
-                timestamp,
-                user,
-                wsChannel: ws.channel,
-            });
             if (ws.channel !== channel) {
                 return;
             }

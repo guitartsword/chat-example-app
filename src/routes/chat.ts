@@ -19,12 +19,15 @@ router.post('/', async (req, res) => {
     res.send(document);
 });
 router.post('/:channel', async (req, res) => {
-    const {user, message, channel} = req.body;
-    createMessage(user, message, channel);
-    res.send({
-        channel: req.params.channel,
-        todo: true
-    })
+    const {username, message} = req.body;
+    const channel = req.params.channel;
+    const {error, document} = await createMessage(username, message, channel);
+    if (error || !document) {
+        res.send(error);
+        return;
+    }
+    publishMessage(document);
+    res.send(document);
 });
 
 router.get('/', async (req, res) => {
@@ -35,8 +38,20 @@ router.get('/', async (req, res) => {
     res.send({
         messages:  documents,
         error,
-        messageCount: documents?.length
     });
 });
+router.get('/:channel', async (req, res) => {
+    const channel = req.params.channel;
+    const {
+        error,
+        documents
+    } = await getlastMessages(channel);
+    res.send({
+        messages:  documents,
+        error,
+    });
+});
+
+
 
 export default router;

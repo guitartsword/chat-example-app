@@ -8,6 +8,7 @@ import { wsServer, createSocketServer } from './webSocketServer';
 import { RABBITMQ_QUEUE, RABBITMQ_URL, DEFAULT_CHANNEL, PORT } from './util/envVariables';
 import authRoutes from './routes/auth';
 import chatRoutes from './routes/chat';
+import channelsRoutes from './routes/channels';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.static('public'));
 
 app.use('/', authRoutes);
 app.use('/chat', chatRoutes);
+app.use('/channels', channelsRoutes);
 
 // app.get('/', (req, res) => res.send('Message Chat App'));
 
