@@ -28,6 +28,9 @@ These are the following variables you must configure
 PORT=3030
 RABBITMQ_URL=amqp://rabbitmqurl
 RABBITMQ_QUEUE=queue_name
+RABBITMQ_STOCKBOT_QUEUE=stock_queue_name
+JWT_SECRET=suPerBIff1cUlt5EcreT123456
+SALT_ROUNDS=12
 ```
 
 ## Usage Instructions

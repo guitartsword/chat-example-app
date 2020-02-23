@@ -1,7 +1,8 @@
 import express from 'express';
 import bodyParser from "body-parser";
+import WebSocket, { Server as SocketServer } from 'ws';
 
-import { createSocketServer } from './webSocketServer';
+import { createSocketServer, CustomSocketServer } from './webSocketServer';
 import {  PORT } from './util/envVariables';
 import authRoutes from './routes/auth';
 import chatRoutes from './routes/chat';
@@ -21,4 +22,9 @@ const server = app.listen(PORT, () => {
     console.log(`Connect to PORT ${PORT}`)
 });
 
-createSocketServer(server);
+const wsServer = new SocketServer({
+    noServer: true
+}) as CustomSocketServer;
+
+
+createSocketServer(server, wsServer);

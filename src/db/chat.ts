@@ -7,6 +7,7 @@ db.loadDatabase();
 
 export default db;
 export interface ChatMessage {
+    user: string
     message: string
     timestamp: number
     channel: string
