@@ -22,11 +22,14 @@ export const stockBotMiddleware = async (req: Request, res: Response, next:NextF
         next();
         return;
     }
-    if(!message.includes('/stock=')) {
+    const cmdRegex = /\/stock\s*=?\s*([^\s=]+)/;
+    const cmdMatch = message.match(cmdRegex);
+    if(!cmdMatch) {
         next();
         return;
     }
-    const stockCode = message.replace(/\/stock\s*=?\s*/, '');
+    const stockCode = cmdMatch[1];
+    console.log(cmdMatch);
     const ch = await amqpChannel();
     ch.assertQueue('stock_bot', { durable: false, });
     const botObject = {

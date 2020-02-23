@@ -52,6 +52,9 @@ function sendMessage() {
     event.preventDefault();
     const messageInput = document.querySelector('#message');
     const text = messageInput.value;
+    if(!text) {
+        return;
+    }
     var requestOptions = {
         method: 'POST',
         headers: {
