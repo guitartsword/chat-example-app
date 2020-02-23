@@ -19,11 +19,7 @@ export interface CustomSocketServer extends SocketServer {
     clients: Set<CustomWS>
 }
 
-export const wsServer = new SocketServer({
-    noServer: true
-}) as CustomSocketServer;
-
-const checkClientIsAlive = () => {
+const checkClientIsAlive = (wsServer: CustomSocketServer) => {
     const interval = setInterval(function ping() {
         wsServer.clients.forEach((ws: CustomWS) => {
             if (ws.isAlive === false) return ws.terminate();
@@ -46,7 +42,7 @@ const handleQueueMessage = (messageData: ChatMessage) => {
     };
 }
 
-const handleAmqpMessage = async () => {
+const handleAmqpMessage = async (wsServer: CustomSocketServer) => {
     const ch = await amqpChannel();
     ch.consume(RABBITMQ_QUEUE, (msg) => {
         const message: ChatMessage = JSON.parse(msg?.content.toString() || '{}');
@@ -93,6 +89,6 @@ export const createSocketServer = async (server: Server, wsServer: CustomSocketS
         ws.isAlive = true;
         createEventListeners(ws);
     });
-    handleAmqpMessage();
-    checkClientIsAlive();
+    handleAmqpMessage(wsServer);
+    checkClientIsAlive(wsServer);
 }
