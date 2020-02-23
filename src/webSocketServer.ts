@@ -43,10 +43,14 @@ export const createSocketServer = async (server: Server) => {
             ws.isAlive = true;
         });
         ws.on('authenticate', (token) => {
-            const payload = jwt.verify(token, JWT_SECRET) as UserToken;
-            ws.username = payload.username;
-            ws.isAuthenticated = true;
-            ws.channel = 'default';
+            try {
+                const payload = jwt.verify(token, JWT_SECRET) as UserToken;
+                ws.username = payload.username;
+                ws.isAuthenticated = true;
+                ws.channel = 'default';
+            } catch {
+                return
+            }
         });
         ws.on('message', function (message) {
             const event = JSON.parse(message.toString());

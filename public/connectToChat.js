@@ -1,15 +1,26 @@
-const ws = new WebSocket(`ws://${location.host}/chat`);
+let ws = new WebSocket(`ws://${location.host}/chat`);
+setWSEvents(ws);
+let reconnectInterval;
 let authToken = '';
-ws.onmessage = (socket) => {
-    console.log(socket);
-    const msg = JSON.parse(socket.data);
-    const messageDiv = document.createElement('div');
-    const messageParagraph = document.createElement('p');
-    messageDiv.append(messageParagraph);
-    messageParagraph.innerText = `${msg.user} [${msg.channel}]: ${msg.message}`
-    document.querySelector('#chat').append(messageDiv);
-};
-ws.onclose = () => alert('Lost connection, please Refresh');
+function setWSEvents(ws) {
+    ws.onopen = () => {
+        clearInterval(reconnectInterval);
+        wsLogin(ws, authToken);
+    }
+    ws.onmessage = (socket) => {
+        console.log(socket);
+        const msg = JSON.parse(socket.data);
+        const messageDiv = document.createElement('div');
+        const messageParagraph = document.createElement('p');
+        messageDiv.append(messageParagraph);
+        messageParagraph.innerText = `${msg.user} [${msg.channel}]: ${msg.message}`
+        document.querySelector('#chat').append(messageDiv);
+    };
+    ws.onclose = () => {
+        alert('Connection close, please refresh');
+    };
+}
+
 
 function sendMessage() {
     const messageInput = document.querySelector('#message');
@@ -29,7 +40,7 @@ function sendMessage() {
     fetch(`http://${location.host}/chat`, requestOptions);
 }
 
-function wsLogin(token) {
+function wsLogin(ws, token) {
     ws.send(JSON.stringify({
         type: 'authenticate',
         payload: token
@@ -59,7 +70,7 @@ function handleLogin() {
             alert(error)
         }
         if (token) {
-            wsLogin(token);
+            wsLogin(ws, token);
             authToken = token;
             usernameInput.value = '';
             passwordInput.value = '';
@@ -87,6 +98,22 @@ function handleRegister() {
     };
 
     fetch(`http://${location.host}/register`, requestOptions).then((res) => res.json()).then(({ created, username }) => {
+        if (!created) {
+            alert('ERROR: User creation failed')
+            return
+        }
+        usernameInput.value = '';
+        passwordInput.value = '';
+    });
+}
+
+function getLastMessages() {
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    fetch(`http://${location.host}/chat`).then((res) => res.json()).then(({ created, username }) => {
         if (!created) {
             alert('ERROR: User creation failed')
             return
