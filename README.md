@@ -22,7 +22,8 @@ This is a chat app using RabbitMQ, express and ws
 
 ### Environmental Variables
 
-These are the following variables you must configure
+These are the following variables you must configure,
+USE THE SAME ENVIRONMENTAL RABBITMQ VARIABLES FOR THE BOT
 
 ```sh
 PORT=3030
