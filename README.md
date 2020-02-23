@@ -3,11 +3,13 @@ This is a chat app using RabbitMQ, express and ws
 
 ## Pre requirements
 
+- Clone and Install the stock bot [instructions here](https://github.com/guitartsword/chat-stock-bot)
 - Node installed
 - A web socket capable browser
 - Have one RabbitMQ instance create and at least one queue
 - bcrypt depends on `python 2.x`, `node-gyp`. [more details here](https://github.com/kelektiv/node.bcrypt.js)
 - node-gyp wich depends on python, and some specifics to OS, [more details here](https://github.com/nodejs/node-gyp)
+
 
 ## Installation Instructions
 
@@ -16,6 +18,7 @@ This is a chat app using RabbitMQ, express and ws
 3. Create a .env file in the root project folder
 4. `npm install`
 5. `npm run dev`
+6. Run the bot [install instructions and repository here](https://github.com/guitartsword/chat-stock-bot)
 
 ### Environmental Variables
 

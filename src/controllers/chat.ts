@@ -16,8 +16,8 @@ export const stockBotMiddleware = async (req: Request, res: Response, next:NextF
     const {
         username,
         message,
-        channel='default',
     } = req.body;
+    const channel = req.url.slice(1) || 'default';
     if (!message) {
         next();
         return;
