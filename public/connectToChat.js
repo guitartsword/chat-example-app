@@ -10,19 +10,22 @@ function setWSEvents(ws) {
     ws.onmessage = (socket) => {
         console.log(socket);
         const msg = JSON.parse(socket.data);
-        const messageDiv = document.createElement('div');
-        const messageParagraph = document.createElement('p');
-        messageDiv.append(messageParagraph);
-        messageParagraph.innerText = `${msg.user} [${msg.channel}]: ${msg.message}`
-        document.querySelector('#chat').append(messageDiv);
+        appendMessage(msg);
     };
     ws.onclose = () => {
         alert('Connection close, please refresh');
     };
 }
-
+function appendMessage(msg) {
+    const messageDiv = document.createElement('div');
+    const messageParagraph = document.createElement('p');
+    messageDiv.append(messageParagraph);
+    messageParagraph.innerText = `${msg.user} [${msg.channel}]: ${msg.message}`
+    document.querySelector('#chat').append(messageDiv);
+}
 
 function sendMessage() {
+    event.preventDefault();
     const messageInput = document.querySelector('#message');
     const text = messageInput.value;
     var requestOptions = {
@@ -48,6 +51,7 @@ function wsLogin(ws, token) {
 }
 
 function handleLogin() {
+    event.preventDefault();
     const loginSection = document.querySelector('#login-section');
     const usernameInput = document.querySelector('#username');
     const passwordInput = document.querySelector('#password');
@@ -70,8 +74,9 @@ function handleLogin() {
             alert(error)
         }
         if (token) {
-            wsLogin(ws, token);
             authToken = token;
+            wsLogin(ws, token);
+            getLastMessages();
             usernameInput.value = '';
             passwordInput.value = '';
             loginSection.style.display = 'none';
@@ -80,6 +85,7 @@ function handleLogin() {
 }
 
 function handleRegister() {
+    event.preventDefault()
     const loginSection = document.querySelector('#login-section');
     const usernameInput = document.querySelector('#username');
     const passwordInput = document.querySelector('#password');
@@ -110,15 +116,19 @@ function handleRegister() {
 function getLastMessages() {
     var requestOptions = {
         method: 'GET',
-        redirect: 'follow'
+        redirect: 'follow',
+        headers: {
+            'Authorization': `Bearer ${authToken}`,
+        }
     };
 
-    fetch(`http://${location.host}/chat`).then((res) => res.json()).then(({ created, username }) => {
-        if (!created) {
-            alert('ERROR: User creation failed')
+    fetch(`http://${location.host}/chat`, requestOptions).then((res) => res.json()).then(({ messages, error }) => {
+        if (error) {
+            console.log('ERROR: getching');
             return
         }
-        usernameInput.value = '';
-        passwordInput.value = '';
+        messages.reverse().forEach((msg) => {
+            appendMessage(msg)
+        })
     });
 }

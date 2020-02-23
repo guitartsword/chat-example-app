@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 
 import { JWT_SECRET, RABBITMQ_URL, RABBITMQ_QUEUE } from './util/envVariables';
 import { UserToken } from './util/commonTypes';
+import amqpChannel from './util/rabbitMQ';
 
 interface CustomSocketServer extends SocketServer {
     clients: Set<any>
@@ -73,9 +74,7 @@ export const createSocketServer = async (server: Server) => {
         //     ch.sendToQueue(RABBITMQ_QUEUE, Buffer.from(message));
         // })
     });
-    const conn = await amqp.connect(RABBITMQ_URL);
-    const ch = await conn.createChannel();
-    ch.assertQueue(RABBITMQ_QUEUE, { durable: false, });
+    const ch = await amqpChannel();
     ch.consume(RABBITMQ_QUEUE, (msg) => {
         console.log(msg?.content.toString());
         const {

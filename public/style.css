@@ -1,0 +1,4 @@
+#chat {
+    max-height: 50vh;
+    overflow-y: auto;
+}

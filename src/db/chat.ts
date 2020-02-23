@@ -27,10 +27,13 @@ export const createMessage = async (user:string, message:string, channel='defaul
     });
 }
 
-export const getlastMessages = async (channel: string, messageCount=50) => {
+export const getlastMessages = async (channel='default', messageCount=50) => {
     return new Promise<{error: Error | null, documents: ChatMessage[] | null}>((res) => {
         db.find({
-            // channel
+            channel,
+            user: {
+                $exists: true
+            }
         }).sort({
             timestamp: -1
         }).limit(messageCount).exec((err, doc) => {

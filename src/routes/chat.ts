@@ -1,11 +1,12 @@
 import {Router} from 'express';
 import { getlastMessages, createMessage } from '../db/chat';
 import { verifyTokenMiddleware } from '../controllers/authentication';
-import { publishMessage } from '../controllers/chat';
+import { publishMessage, stockBotMiddleware } from '../controllers/chat';
 
 const router = Router();
 
 router.use(verifyTokenMiddleware);
+router.use(stockBotMiddleware);
 
 router.post('/', async (req, res) => {
     const {username, message} = req.body;
@@ -27,11 +28,14 @@ router.post('/:channel', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    const { username, password } = req.body;
-    const created = await getlastMessages('default');
+    const {
+        error,
+        documents
+    } = await getlastMessages();
     res.send({
-        username,
-        created,
+        messages:  documents,
+        error,
+        messageCount: documents?.length
     });
 });
 
