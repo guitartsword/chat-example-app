@@ -4,6 +4,7 @@ let reconnectInterval;
 let authToken = '';
 let channel = '';
 //Web Sockets
+const baseUrl = `${location.protocol}//${location.host}`
 function setWSEvents(ws) {
     ws.onopen = () => {
         clearInterval(reconnectInterval);
@@ -67,7 +68,7 @@ function sendMessage() {
         redirect: 'follow'
     };
 
-    fetch(`http://${location.host}/chat/${channel}`, requestOptions).then(() => {
+    fetch(`${baseUrl}/chat/${channel}`, requestOptions).then(() => {
         messageInput.value = '';
     });
 }
@@ -92,7 +93,7 @@ function handleLogin() {
         redirect: 'follow'
     };
 
-    fetch(`http://${location.host}/login`, requestOptions).then((res) => res.json()).then(({ error, token }) => {
+    fetch(`${baseUrl}/login`, requestOptions).then((res) => res.json()).then(({ error, token }) => {
         if (error) {
             alert(error)
         }
@@ -126,7 +127,7 @@ function handleRegister() {
         redirect: 'follow'
     };
 
-    fetch(`http://${location.host}/register`, requestOptions).then((res) => res.json()).then(({ created, username }) => {
+    fetch(`${baseUrl}/register`, requestOptions).then((res) => res.json()).then(({ created, username }) => {
         if (!created) {
             alert('ERROR: User creation failed')
             return
@@ -145,7 +146,7 @@ function getLastMessages(channel = '') {
         }
     };
 
-    fetch(`http://${location.host}/chat/${channel}`, requestOptions).then((res) => res.json()).then(({ messages, error }) => {
+    fetch(`${baseUrl}/chat/${channel}`, requestOptions).then((res) => res.json()).then(({ messages, error }) => {
         if (error) {
             console.log('ERROR: fetching');
             return
