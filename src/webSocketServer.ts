@@ -2,10 +2,9 @@ import url from 'url';
 import { Server } from 'http'
 
 import WebSocket, { Server as SocketServer } from 'ws';
-import amqp from 'amqplib';
 import jwt from 'jsonwebtoken';
 
-import { JWT_SECRET, RABBITMQ_URL, RABBITMQ_QUEUE } from './util/envVariables';
+import { JWT_SECRET, RABBITMQ_QUEUE, DEFAULT_CHANNEL } from './util/envVariables';
 import { UserToken } from './util/commonTypes';
 import amqpChannel from './util/rabbitMQ';
 
@@ -48,7 +47,7 @@ export const createSocketServer = async (server: Server) => {
                 const payload = jwt.verify(token, JWT_SECRET) as UserToken;
                 ws.username = payload.username;
                 ws.isAuthenticated = true;
-                ws.channel = 'default';
+                ws.channel = DEFAULT_CHANNEL;
             } catch {
                 return
             }
@@ -60,22 +59,6 @@ export const createSocketServer = async (server: Server) => {
         ws.on('channel', (channel) => {
             ws.channel = channel;
         });
-        // ws.on('chat', async (payload) => {
-        //     if (!ws.isAuthenticated) {
-        //         ws.send(JSON.stringify({
-        //             type: 'error',
-        //             message: 'Not Authenticated'
-        //         }));
-        //     }
-        //     const message = JSON.stringify({
-        //         message: payload.message,
-        //         channel: payload.channel || 'default',
-        //     });
-        //     const conn = await amqp.connect(RABBITMQ_URL);
-        //     const ch = await conn.createChannel();
-        //     ch.assertQueue(RABBITMQ_QUEUE, { durable: false, });
-        //     ch.sendToQueue(RABBITMQ_QUEUE, Buffer.from(message));
-        // })
     });
     const ch = await amqpChannel();
     ch.consume(RABBITMQ_QUEUE, (msg) => {

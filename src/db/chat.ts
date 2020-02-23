@@ -1,5 +1,6 @@
 import util from 'util';
 import DataStore from "nedb";
+import { DEFAULT_CHANNEL } from '../util/envVariables';
 
 const db  = new DataStore('./db/chat');
 db.loadDatabase();
@@ -12,7 +13,7 @@ export interface ChatMessage {
     _id?: string
 }
 
-export const createMessage = async (user:string, message:string, channel='default') => {
+export const createMessage = async (user:string, message:string, channel=DEFAULT_CHANNEL) => {
     return new Promise<{error: Error | null, document: ChatMessage | null}>((res) => {
         db.insert({
             user,
@@ -28,7 +29,7 @@ export const createMessage = async (user:string, message:string, channel='defaul
     });
 }
 
-export const getlastMessages = async (channel='default', messageCount=50) => {
+export const getlastMessages = async (channel=DEFAULT_CHANNEL, messageCount=50) => {
     return new Promise<{error: Error | null, documents: ChatMessage[] | null}>((res) => {
         db.find({
             channel,

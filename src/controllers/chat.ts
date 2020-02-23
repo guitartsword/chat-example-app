@@ -2,7 +2,7 @@ import amqp from 'amqplib';
 import { Request, Response, NextFunction } from 'express';
 
 import { ChatMessage } from '../db/chat';
-import { RABBITMQ_QUEUE } from '../util/envVariables';
+import { RABBITMQ_QUEUE, DEFAULT_CHANNEL } from '../util/envVariables';
 import amqpChannel from '../util/rabbitMQ';
 
 export const publishMessage = async (chatMessage: ChatMessage) => {
@@ -17,7 +17,7 @@ export const stockBotMiddleware = async (req: Request, res: Response, next:NextF
         username,
         message,
     } = req.body;
-    const channel = req.url.slice(1) || 'default';
+    const channel = req.url.slice(1) || DEFAULT_CHANNEL;
     if (!message) {
         next();
         return;
