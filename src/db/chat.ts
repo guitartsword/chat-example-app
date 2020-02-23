@@ -6,7 +6,7 @@ const db  = new DataStore('./db/chat');
 db.loadDatabase();
 
 export default db;
-export interface ChatMessage {
+export interface ChatMessageSchema {
     user: string
     message: string
     timestamp: number
@@ -15,8 +15,8 @@ export interface ChatMessage {
 }
 
 export const createMessage = async (user:string, message:string, channel=DEFAULT_CHANNEL) => {
-    return new Promise<{error: Error | null, document: ChatMessage | null}>((res) => {
-        db.insert({
+    return new Promise<{error: Error | null, document: ChatMessageSchema | null}>((res) => {
+        db.insert<ChatMessageSchema>({
             user,
             message,
             channel,
@@ -31,7 +31,7 @@ export const createMessage = async (user:string, message:string, channel=DEFAULT
 }
 
 export const getlastMessages = async (channel=DEFAULT_CHANNEL, messageCount=50) => {
-    return new Promise<{error: Error | null, documents: ChatMessage[] | null}>((res) => {
+    return new Promise<{error: Error | null, documents: ChatMessageSchema[] | null}>((res) => {
         db.find({
             channel,
             user: {

@@ -5,6 +5,11 @@ import { SALT_ROUNDS } from "../util/envVariables";
 const db  = new DataStore('./db/users');
 db.loadDatabase();
 
+interface UserSchema {
+    username: string
+    password: string
+}
+
 export const create = async (username:string, password:string) => {
     if (password.length < 8 || username.length < 4) {
         return false;
@@ -18,7 +23,7 @@ export const create = async (username:string, password:string) => {
     if (document){
         return false;
     }
-    db.insert({
+    db.insert<UserSchema>({
         username,
         password: bcrypt.hashSync(password, SALT_ROUNDS)
     });
@@ -26,7 +31,7 @@ export const create = async (username:string, password:string) => {
 }
 
 export const getUser = (username: string) => {
-    return new Promise<{error: Error | null, document: any | null}>((res) => {
+    return new Promise<{error: Error | null, document: UserSchema | null}>((res) => {
         db.findOne({
             username
         }, (err, doc) => {

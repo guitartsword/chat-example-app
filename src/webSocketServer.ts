@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET, RABBITMQ_QUEUE, DEFAULT_CHANNEL } from './util/envVariables';
 import { UserToken } from './util/commonTypes';
 import amqpChannel from './util/rabbitMQ';
-import { ChatMessage } from './db/chat';
+import { ChatMessageSchema } from './db/chat';
 
 export interface CustomWS extends WebSocket {
     isAlive: boolean
@@ -32,7 +32,7 @@ const checkClientIsAlive = (wsServer: CustomSocketServer) => {
         clearInterval(interval);
     });
 }
-const handleQueueMessage = (messageData: ChatMessage) => {
+const handleQueueMessage = (messageData: ChatMessageSchema) => {
     const { channel } = messageData;
     return (ws:CustomWS) => {
         if (ws.channel !== channel) {
@@ -45,7 +45,7 @@ const handleQueueMessage = (messageData: ChatMessage) => {
 const handleAmqpMessage = async (wsServer: CustomSocketServer) => {
     const ch = await amqpChannel();
     ch.consume(RABBITMQ_QUEUE, (msg) => {
-        const message: ChatMessage = JSON.parse(msg?.content.toString() || '{}');
+        const message: ChatMessageSchema = JSON.parse(msg?.content.toString() || '{}');
         wsServer.clients.forEach(handleQueueMessage(message), { noAck: true });
     });
 };

@@ -5,12 +5,8 @@ import { JWT_SECRET } from '../util/envVariables';
 import { UserToken } from '../util/commonTypes';
 import { Request, Response, NextFunction } from "express";
 
-export const handleLogin = async (username: string, password: string) => {
-    const {error, document} = await getUser(username);
-    if(error || !document) {
-        return { error: 'User not found' };
-    }
-    if (bcrypt.compareSync(password, document.password)){
+export const handleLogin = async (username: string, password: string, dbPassword: string) => {
+    if (bcrypt.compareSync(password, dbPassword)){
         return { token: jwt.sign({ username }, JWT_SECRET) };
     }
     return { error: 'Invalid Password' };

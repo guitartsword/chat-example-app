@@ -6,7 +6,12 @@ const router = Router();
 
 router.post('/login', async (req, res) => {
     const {username, password} = req.body;
-    res.send(await handleLogin(username, password));
+    const {error, document} = await getUser(username);
+    if(error || !document) {
+        res.send({ error: 'User not found' });
+        return { error: 'User not found' };
+    }
+    res.send(await handleLogin(username, password, document.password));
 });
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
